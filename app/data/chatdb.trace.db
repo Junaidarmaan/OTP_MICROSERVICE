@@ -1,0 +1,18 @@
+2025-06-09 11:25:59.626755+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-09 11:26:16.161007+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-09 11:26:18.828054+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-09 11:28:17.218941+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-09 11:30:25.617961+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-09 18:09:12.405789+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
