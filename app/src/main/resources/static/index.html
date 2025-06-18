@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Send OTP Request</title>
+</head>
+<body>
+  <h2>Send OTP</h2>
+
+  <form id="otpForm">
+    <label>Email:</label><br>
+    <input type="email" id="email" required><br><br>
+
+    <label>Subject:</label><br>
+    <input type="text" id="subject"><br><br>
+
+    <label>Content:</label><br>
+    <textarea id="content"></textarea><br><br>
+
+    <label>Expiry (5 to 60 minutes):</label><br>
+    <input type="number" id="expiry" min="5" max="60"><br><br>
+
+    <label>OTP Type (numeric/alphabetic/alphanumeric):</label><br>
+    <input type="text" id="type"><br><br>
+
+    <label>OTP Length (4 to 16):</label><br>
+    <input type="number" id="length" min="4" max="16"><br><br>
+
+    <label>App Name:</label><br>
+    <input type="text" id="appName" value="Junnu Message"><br><br>
+
+    <label>File Path (string only):</label><br>
+    <input type="text" id="filePath" placeholder="C:\\path\\to\\file.pdf"><br><br>
+
+    <label>Attachment Needed:</label>
+    <input type="checkbox" id="attachmentNeeded" checked><br><br>
+
+    <button type="submit">Send OTP</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById("otpForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const data = {
+        email: document.getElementById("email").value,
+        subject: document.getElementById("subject").value,
+        content: document.getElementById("content").value,
+        expiry: parseInt(document.getElementById("expiry").value),
+        type: document.getElementById("type").value,
+        length: parseInt(document.getElementById("length").value),
+        appName: document.getElementById("appName").value,
+        filePath: document.getElementById("filePath").value,
+        attachmentNeeded: document.getElementById("attachmentNeeded").checked
+      };
+
+      try {
+        const response = await fetch("http://localhost:8080/sendotp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.text();
+        document.getElementById("response").textContent = "Response: " + result;
+      } catch (error) {
+        document.getElementById("response").textContent = "Error: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>

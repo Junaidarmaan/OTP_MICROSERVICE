@@ -16,3 +16,15 @@ alter table if exists credentials add column limit integer not null [42001-232]
 2025-06-09 18:09:12.405789+05:30 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
 alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-18 21:41:43.388764+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-18 22:10:01.934790+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-18 22:11:11.637913+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "alter table if exists credentials add column [*]limit integer not null"; expected "identifier"; SQL statement:
+alter table if exists credentials add column limit integer not null [42001-232]
+2025-06-18 22:13:42.095958+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select c1_0.mail,c1_0.attempts,c1_0.expiry,c1_0.[*]limit,c1_0.otp,c1_0.time from credentials c1_0 where c1_0.mail=?"; expected "identifier"; SQL statement:
+select c1_0.mail,c1_0.attempts,c1_0.expiry,c1_0.limit,c1_0.otp,c1_0.time from credentials c1_0 where c1_0.mail=? [42001-232]

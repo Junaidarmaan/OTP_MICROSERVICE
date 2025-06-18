@@ -1,5 +1,7 @@
 package com.junnu.app.Services;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,11 +11,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.junnu.app.DTO.UserData;
 import com.junnu.app.Models.Credentials;
 import com.junnu.app.Repositories.CredentialsRepo;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 
 @Service
@@ -24,21 +31,22 @@ public class MailService {
     private CredentialsService creds;
     @Autowired
     private CredentialsRepo repo;
-    public ResponseEntity<String> sendEMail(UserData  data){
-        
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(data.getEmail());
-        message.setSubject(data.getSubject());
-        String code = generateCode(data.getType(),data.getLength());
-        message.setText(data.getContent() + code);
-        mail.send(message);
-        System.out.println("Received data is " + data.toString());
-        System.out.println("generated code is :" + code);
-        if(data.getLength() > 12 || data.getLength() < 4){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The Length must be between 4 and 12 inclusive");
-        }if(data.getExpiry() < 5 || data.getExpiry() > 60){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The expiry must be between 5 and 60 inclusive");
+    
+    public ResponseEntity<String> sendEMail(UserData  data) throws MessagingException, UnsupportedEncodingException{
+        MimeMessage mime = mail.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mime,true);
+        helper.setFrom(new InternetAddress("Junnubest@gmail.com",data.getAppName())); 
+        helper.setTo(data.getEmail());
+        helper.setSubject(data.getSubject());
+        helper.setText(data.getContent());
+        String code = generateCode(data);
+        helper.setText(data.getContent() + code);
+        if(data.isAttachmentNeeded()){
+            File file = new File(data.getFilePath());
+            helper.addAttachment(file.getName(), file);
         }
+        mail.send(mime);
+        
         Credentials c = new Credentials();
         c.setMail(data.getEmail());
         c.setExpiry(data.getExpiry());
@@ -51,7 +59,9 @@ public class MailService {
         
         return ResponseEntity.status(HttpStatus.OK).body(code);
     }
-    public String generateCode(String type, int len){
+    public String generateCode(UserData data){
+        int len = data.getLength();
+        String type = data.getType();
         double start = Math.pow(10,len - 1);
         double end = Math.pow(10, len) - 1;
         long code = 0L;

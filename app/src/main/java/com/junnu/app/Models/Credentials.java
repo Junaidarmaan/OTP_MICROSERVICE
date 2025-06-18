@@ -13,7 +13,7 @@ public class Credentials {
     LocalDateTime time;
     int expiry;
     int attempts;
-    int limit;
+    int maxLimit;
 
     public Credentials(){  
         this.attempts = 1;
@@ -55,11 +55,12 @@ public class Credentials {
                 + attempts + "]";
     }
 
-    public int getLimit() {
-        return limit;
+    public int getMaxLimit() {
+        return maxLimit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setMaxLimit(int maxLimit) {
+        this.maxLimit = maxLimit;
     }
+
 }
