@@ -57,7 +57,7 @@
       };
 
       try {
-        const response = await fetch("http://localhost:8080/sendotp", {
+        const response = await fetch("/sendotp", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

@@ -1,0 +1,5 @@
+hello this is a test file
+// it is used to test the file system
+// it should be ignored by the linter
+// and not cause any issues
+// it is a simple text file

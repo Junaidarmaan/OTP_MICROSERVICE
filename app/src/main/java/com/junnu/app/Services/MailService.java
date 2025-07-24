@@ -22,7 +22,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-
 @Service
 public class MailService {
     @Autowired
@@ -31,68 +30,82 @@ public class MailService {
     private CredentialsService creds;
     @Autowired
     private CredentialsRepo repo;
-    
-    public ResponseEntity<String> sendEMail(UserData  data) throws MessagingException, UnsupportedEncodingException{
-        MimeMessage mime = mail.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mime,true);
-        helper.setFrom(new InternetAddress("Junnubest@gmail.com",data.getAppName())); 
-        helper.setTo(data.getEmail());
-        helper.setSubject(data.getSubject());
-        helper.setText(data.getContent());
-        String code = generateCode(data);
-        helper.setText(data.getContent() + code);
-        if(data.isAttachmentNeeded()){
-            File file = new File(data.getFilePath());
-            helper.addAttachment(file.getName(), file);
-        }
-        mail.send(mime);
-        
-        Credentials c = new Credentials();
-        c.setMail(data.getEmail());
-        c.setExpiry(data.getExpiry());
-        LocalDateTime time = LocalDateTime.now();
-        c.setTime(time);
-        c.setOtp(code);
-        creds.addCreds(c);
-        System.out.println("Credential details is : " + c.toString());
 
-        
-        return ResponseEntity.status(HttpStatus.OK).body(code);
+    public ResponseEntity<String> sendEMail(UserData data) {
+        try {
+            MimeMessage mime = mail.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mime, true);
+
+            helper.setFrom(new InternetAddress("Junnubest@gmail.com", data.getAppName()));
+            helper.setTo(data.getEmail());
+            helper.setSubject(data.getSubject());
+
+            String code = generateCode(data);
+            helper.setText(data.getContent() + code);
+
+            if (data.isAttachmentNeeded()) {
+                File file = new File(data.getFilePath());
+                if (file.exists()) {
+                    helper.addAttachment(file.getName(), file);
+                } else {
+                    System.out.println("⚠️ Attachment file not found at: " + data.getFilePath());
+                }
+            }
+
+            mail.send(mime);
+
+            Credentials c = new Credentials();
+            c.setMail(data.getEmail());
+            c.setExpiry(data.getExpiry());
+            c.setTime(LocalDateTime.now());
+            c.setOtp(code);
+            creds.addCreds(c);
+
+            System.out.println("✅ Credential details: " + c.toString());
+
+            return ResponseEntity.status(HttpStatus.OK).body(code);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to send OTP email: " + e.getMessage());
+        }
     }
-    public String generateCode(UserData data){
+
+    public String generateCode(UserData data) {
         int len = data.getLength();
         String type = data.getType();
-        double start = Math.pow(10,len - 1);
+        double start = Math.pow(10, len - 1);
         double end = Math.pow(10, len) - 1;
         long code = 0L;
         long lstart = (long) start;
         long lend = (long) end;
-        if(type.equals( "numeric")){
-            code = ThreadLocalRandom.current().nextLong(lstart,lend);
-        }else if(type.equals("alphanumeric")){
-            String result= "";
+        if (type.equals("numeric")) {
+            code = ThreadLocalRandom.current().nextLong(lstart, lend);
+        } else if (type.equals("alphanumeric")) {
+            String result = "";
             int i = 0;
-            while(i < len) {
-                int chance = ThreadLocalRandom.current().nextInt(1,3);
+            while (i < len) {
+                int chance = ThreadLocalRandom.current().nextInt(1, 3);
                 System.out.println("Chance is " + chance);
-                if(chance == 1){
-                    result += (char)ThreadLocalRandom.current().nextInt(65,91);
-                }else{
-                    result += Integer.toString(ThreadLocalRandom.current().nextInt(0,10));
+                if (chance == 1) {
+                    result += (char) ThreadLocalRandom.current().nextInt(65, 91);
+                } else {
+                    result += Integer.toString(ThreadLocalRandom.current().nextInt(0, 10));
                 }
                 i++;
             }
             return result;
-        }else if(type.equals("alpha")){
+        } else if (type.equals("alpha")) {
             String result = "";
             int i = 0;
             while (i < len) {
-                result += (char)ThreadLocalRandom.current().nextInt(65,91);
+                result += (char) ThreadLocalRandom.current().nextInt(65, 91);
                 i++;
             }
             return result;
-        }else{
-            throw new IllegalArgumentException("Invalid parameter try 'alpha -> only alphabets' 'numeric -> only numbers' 'alphanumeric -> both'");
+        } else {
+            throw new IllegalArgumentException(
+                    "Invalid parameter try 'alpha -> only alphabets' 'numeric -> only numbers' 'alphanumeric -> both'");
         }
         return Long.toString(code);
     }
